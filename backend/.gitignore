@@ -1,0 +1,2 @@
+node_modules
+image_dir = os.path.join(os.path.dirname(__file__), 'images')
