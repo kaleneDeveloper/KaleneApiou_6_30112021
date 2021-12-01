@@ -24,6 +24,7 @@ exports.like = (req, res, next) => {
             } else if (sauce.dislikes === undefined) {
                 sauce.dislikes = 0;
             }
+            
             const like = req.body.like;
             if (sauce.usersLiked.includes(req.body.userId)) {
                 sauce.likes--;
@@ -71,7 +72,6 @@ exports.modifySauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then((sauce) => {
             const filename = sauce.imageUrl.split("/images/")[1];
-
             if (req.file) {
                 fs.unlink(`images/${filename}`, () => {});
                 const sauceObject = {
