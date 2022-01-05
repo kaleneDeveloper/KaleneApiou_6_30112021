@@ -24,7 +24,6 @@ exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email })
         .then((user) => {
             if (!user) {
-                // return user.comparePassword({ error: "Utilisateur non trouvé !" });
                 return user
                     .status(401)
                     .json({ error: "Utilisateur non trouvé !" });
