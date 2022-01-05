@@ -21,31 +21,34 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-    User.findOne({ email: req.body.email }).then((user) => {
-        if (!user) {
-            // return user.comparePassword({ error: "Utilisateur non trouvé !" });
-            return user.status(401).json({ error: "Utilisateur non trouvé !" });
-        }
-        bcrypt
-        .compare(req.body.password, user.password)
-        .then((valid) => {
-            if (!valid) {
-                return res
+    User.findOne({ email: req.body.email })
+        .then((user) => {
+            if (!user) {
+                // return user.comparePassword({ error: "Utilisateur non trouvé !" });
+                return user
                     .status(401)
-                    .json({ error: "Mot de passe incorrect !" });
+                    .json({ error: "Utilisateur non trouvé !" });
             }
-            const token = jwt.sign(
-                { userId: user._id, email: user.email },
-                process.env.TOKEN_KEY,
-                { expiresIn: "24h" }
-            );
-            res.status(200).json({
-                userId: user._id,
-                token: token,
-                expiresIn: "24h",
-            });
+            bcrypt
+                .compare(req.body.password, user.password)
+                .then((valid) => {
+                    if (!valid) {
+                        return res
+                            .status(401)
+                            .json({ error: "Mot de passe incorrect !" });
+                    }
+                    const token = jwt.sign(
+                        { userId: user._id, email: user.email },
+                        process.env.TOKEN_KEY,
+                        { expiresIn: "24h" }
+                    );
+                    res.status(200).json({
+                        userId: user._id,
+                        token: token,
+                        expiresIn: "24h",
+                    });
+                })
+                .catch((error) => res.status(500).json({ error }));
         })
         .catch((error) => res.status(500).json({ error }));
-    })
-    .catch
 };
