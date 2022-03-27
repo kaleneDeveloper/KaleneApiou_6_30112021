@@ -24,19 +24,25 @@ exports.like = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then((sauce) => {
             const like = req.body.like;
-            if (sauce.usersLiked.includes(req.body.userId)) {
+            if (sauce.usersLiked.includes(req.body.userId) && like === 0) {
                 sauce.likes--;
                 const index = sauce.usersLiked.indexOf(req.body.userId);
                 sauce.usersLiked.splice(index, 1);
-            } else if (like === 1) {
+            } else if (
+                !sauce.usersLiked.includes(req.body.userId) &&
+                like === 1
+            ) {
                 sauce.likes++;
                 sauce.usersLiked.push(req.body.userId);
             }
-            if (sauce.usersDisliked.includes(req.body.userId)) {
+            if (sauce.usersDisliked.includes(req.body.userId) && like === 0) {
                 sauce.dislikes--;
                 const index = sauce.usersDisliked.indexOf(req.body.userId);
                 sauce.usersDisliked.splice(index, 1);
-            } else if (like === -1) {
+            } else if (
+                !sauce.usersDisliked.includes(req.body.userId) &&
+                like === -1
+            ) {
                 sauce.dislikes++;
                 sauce.usersDisliked.push(req.body.userId);
             }
